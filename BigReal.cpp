@@ -1,12 +1,12 @@
-#include<bits/stdc++.h>
-using namespace std;
+
 #include "BigReal.h"
 
 
-bool BigReal::checkVaild(string num)
+
+bool BigReal :: checkValidInput (string input)
 {
-    regex validInput("[-+]?[0-9]+");
-    return regex_match(input, validInput);
+    regex validInput("[-+]?[0-9]+[.]?[0-9]+");
+    return regex_match( input, validInput);
 }
 
 BigReal::BigReal(double realNumber = 0.0)
@@ -15,85 +15,84 @@ BigReal::BigReal(double realNumber = 0.0)
 
 BigReal::BigReal(string realNumber)
 {
-    int count = 0;
+    setNumber(realNumber);
 
-    for (int i = 0; i <= realNumber.size(); i++){
-        if (realNumber[i] == '.'){
-            count++;
-    }
-
-    if (count > 1){
-        cout << "Invalid Input!";
-        exit(0);
-    }
 }
 
 BigReal::BigReal(BigDecimalInt bigInteger)
 {
+    number=bigInteger.getNumber();
 }
 
-BigReal::BigReal(const BigReal& other)
-{
-    ptrNum = new int [other.size];
-    for (int i = 0; i < ptrNum.size; i++){
-        ptrNum[i] = other.ptrNum[i];
-    }
-}
+// BigReal::BigReal(const BigReal& other)
+// {
+//     ptrNum = new int [other.size];
+//     for (int i = 0; i < ptrNum.size; i++){
+//         ptrNum[i] = other.ptrNum[i];
+//     }
+// }
 
-BigReal& BigReal::operator=(const BigReal& other)
-{
-    if (this != &other){
-        delete [] ptrNum;
-        ptrNum = new int [other.size];
+// BigReal& BigReal::operator=(const BigReal& other)
+// {
+//     if (this != &other){
+//         delete [] ptrNum;
+//         ptrNum = new int [other.size];
 
-        for (int i = 0; i < ptrNum.size; i++){
-        ptrNum[i] = other.ptrNum[i];
-        }
-    }
+//         for (int i = 0; i < ptrNum.size; i++){
+//         ptrNum[i] = other.ptrNum[i];
+//         }
+//     }
 
-    return *this;
-}
+//     return *this;
+// }
 
-BigReal::BigReal(BigReal&& other)
-{
-    ptrNum = other.ptrNum;
-    other.ptrNum = nullptr;
-}
+// BigReal::BigReal(BigReal&& other)
+// {
+//     ptrNum = other.ptrNum;
+//     other.ptrNum = nullptr;
+// }
 
-BigReal& BigReal::operator=(const BigReal& other)
-{
-    if (&other != this){
-        delete [] ptrNum;
-        ptrNum = other.ptrNum;
+// BigReal& BigReal::operator=(const BigReal& other)
+// {
+//     if (&other != this){
+//         delete [] ptrNum;
+//         ptrNum = other.ptrNum;
 
-        for (int i = 0; i < ptrNum.size; i++){
-        ptrNum[i] = other.ptrNum[i];
-        }
-    }
-    other.ptrNum = nullptr;
+//         for (int i = 0; i < ptrNum.size; i++){
+//         ptrNum[i] = other.ptrNum[i];
+//         }
+//     }
+//     other.ptrNum = nullptr;
 
-    return *this;
-}
+//     return *this;
+// }
 
 void BigReal :: setNumber(string num)
 {
-
-    number = num;
-    if(number[0] == '+')
+bool validNumber = checkValidInput(num);
+    if(validNumber)
     {
-        number.erase(0,1);
-        signNumber = '+';
-    }
-    else if (number[0] == '-')
-    {
-        number.erase(0,1);
-        signNumber = '-';
+        number = num;
+        if(number[0] == '+')
+        {
+            number.erase(0,1);
+            signNumber = '+';
+        }
+        else if (number[0] == '-')
+        {
+            number.erase(0,1);
+            signNumber = '-';
+        }
+        else
+        {
+            signNumber = '+';
+        }
     }
     else
     {
-        signNumber = '+';
+        cout << "Invalid" << "\n";
+        exit(1);
     }
-
 }
 
 

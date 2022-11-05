@@ -1,5 +1,9 @@
 #ifndef BIGREAL_H
 #define BIGREAL_H
+#include<bits/stdc++.h>
+#include<regex>
+using namespace std;
+#include"BigDecimalIntClass.h"
 
 class BigReal
 {
@@ -19,7 +23,7 @@ class BigReal
         int sign();
         friend ostream& operator << (ostream& out, BigReal num);
         friend istream& operator >> (istream& out, BigReal num);
-        bool checkVaild(string num);
+        
         void setNumber( string num);
             BigReal (string num)
         {
@@ -27,8 +31,9 @@ class BigReal
         }
     private:
         string number;
-        int* ptrNum
+        int* ptrNum;
         char signNumber;
+        bool checkValidInput(string input);
 };
 
 #endif // BIGREAL_H
