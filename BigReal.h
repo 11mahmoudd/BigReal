@@ -8,7 +8,10 @@ using namespace std;
 class BigReal
 {
     public:
-        BigReal(double realNumber = 0.0);
+        BigReal(double realNumber = 0.0){
+            number = "0";
+            signNumber = '0';
+        }
         BigReal (string realNumber);
         BigReal (BigDecimalInt bigInteger);
         BigReal(const BigReal& other);
@@ -23,7 +26,7 @@ class BigReal
         int sign();
         friend ostream& operator << (ostream& out, BigReal num);
         friend istream& operator >> (istream& out, BigReal num);
-        
+
         void setNumber( string num);
             BigReal (string num)
         {
@@ -31,7 +34,7 @@ class BigReal
         }
     private:
         string number;
-        int* ptrNum;
+        int* Number;
         char signNumber;
         bool checkValidInput(string input);
 };

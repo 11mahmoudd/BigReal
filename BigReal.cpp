@@ -9,63 +9,54 @@ bool BigReal :: checkValidInput (string input)
     return regex_match( input, validInput);
 }
 
-BigReal::BigReal(double realNumber = 0.0)
-{
-}
 
-BigReal::BigReal(string realNumber)
+BigReal::BigReal(string number)
 {
-    setNumber(realNumber);
+    setNumber(number);
 
 }
 
 BigReal::BigReal(BigDecimalInt bigInteger)
 {
-    number=bigInteger.getNumber();
+    number = bigInteger.getNumber();
 }
 
-// BigReal::BigReal(const BigReal& other)
-// {
-//     ptrNum = new int [other.size];
-//     for (int i = 0; i < ptrNum.size; i++){
-//         ptrNum[i] = other.ptrNum[i];
-//     }
-// }
+BigReal::BigReal(const BigReal &other) {
+    this->Number = other.Number  ;
+    this->signNumber = other.signNumber ;
+}
 
-// BigReal& BigReal::operator=(const BigReal& other)
-// {
-//     if (this != &other){
-//         delete [] ptrNum;
-//         ptrNum = new int [other.size];
+BigReal::BigReal(BigReal &&other) {
+    Number = other.Number ;
+    signNumber = other.signNumber ;
 
-//         for (int i = 0; i < ptrNum.size; i++){
-//         ptrNum[i] = other.ptrNum[i];
-//         }
-//     }
+    other.Number[0] = '\0' ;
+    other.signNumber = '\0' ;
+}
 
-//     return *this;
-// }
+BigReal &BigReal::operator=(BigReal &&other) {
+    this->Number = other.Number  ;
+    this->signNumber = other.signNumber ;
 
-// BigReal::BigReal(BigReal&& other)
-// {
-//     ptrNum = other.ptrNum;
-//     other.ptrNum = nullptr;
-// }
+    other.Number[0] = '\0' ;
+    other.signNumber = '\0' ;
 
-// BigReal& BigReal::operator=(const BigReal& other)
-// {
-//     if (&other != this){
-//         delete [] ptrNum;
-//         ptrNum = other.ptrNum;
+    return *this;
+}
 
-//         for (int i = 0; i < ptrNum.size; i++){
-//         ptrNum[i] = other.ptrNum[i];
-//         }
-//     }
-//     other.ptrNum = nullptr;
 
-//     return *this;
-// }
+ BigReal& BigReal::operator=(BigReal& other)
+ {
+     if (&other != this){
+         delete [] Number;
+         this->Number = other.Number  ;
+         this->signNumber = other.signNumber ;
+     }
+     other.Number = nullptr;
+     other.signNumber = '\0';
+
+     return *this;
+ }
 
 void BigReal :: setNumber(string num)
 {
