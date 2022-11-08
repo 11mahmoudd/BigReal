@@ -1,37 +1,34 @@
 #ifndef BIGREAL_H
 #define BIGREAL_H
 #include<bits/stdc++.h>
+#include <iostream>
 #include<regex>
 using namespace std;
-#include"BigDecimalIntClass.h"
+#include "BigDecimalInt.h"
 
 class BigReal
 {
     public:
-        BigReal(double realNumber = 0.0);
+        BigReal();
         BigReal (string realNumber);
-        BigReal (BigDecimalInt bigInteger);
-        BigReal(const BigReal& other);
-        BigReal (BigReal&& other);
-        BigReal& operator= (BigReal& other);
-        BigReal& operator= (BigReal&& other);
-        BigReal operator+ (BigReal& other);
-        BigReal operator- (BigReal& other);
+        BigReal(BigDecimalInt bigInteger);
+        bool operator < (const BigDecimalInt& anotherDec);
         bool operator < (BigReal anotherReal);
         bool operator > (BigReal anotherReal);
+        bool operator== (BigReal anotherReal);
+        void setNumber( string num);
         int size();
         int sign();
         friend ostream& operator << (ostream& out, BigReal num);
         friend istream& operator >> (istream& out, BigReal num);
-        
-        void setNumber( string num);
-            BigReal (string num)
-        {
-            setNumber(num);
-        }
+
+    protected:
+
     private:
+        void matchzeros(string f1, string f2);
+        BigDecimalInt whole;
+        string fraction;
         string number;
-        int* ptrNum;
         char signNumber;
         bool checkValidInput(string input);
 };

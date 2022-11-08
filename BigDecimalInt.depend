@@ -1,0 +1,21 @@
+# depslib dependency file v1.0
+1667894445 source:c:\users\dell\desktop\new folder\final\bigdecimalint\bigdecimalint.cpp
+	"BigDecimalInt.h"
+
+1667894445 c:\users\dell\desktop\new folder\final\bigdecimalint\bigdecimalint.h
+	<iostream>
+	<deque>
+	<regex>
+
+1667927931 source:c:\users\dell\desktop\new folder\final\bigdecimalint\bigreal.cpp
+	"BigReal.h"
+
+1667927931 c:\users\dell\desktop\new folder\final\bigdecimalint\bigreal.h
+	<bits/stdc++.h>
+	<iostream>
+	<regex>
+	"BigDecimalInt.h"
+
+1667927931 source:c:\users\dell\desktop\new folder\final\bigdecimalint\main.cpp
+	"BigReal.h"
+

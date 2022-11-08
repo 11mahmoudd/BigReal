@@ -2,19 +2,21 @@
 #include "BigReal.h"
 
 
-
-bool BigReal :: checkValidInput (string input)
+bool BigReal :: checkValidInput(string input)
 {
     regex validInput("[-+]?[0-9]+[.]?[0-9]+");
-    return regex_match( input, validInput);
+    return regex_match(input, validInput);
 }
 
-BigReal::BigReal(double realNumber = 0.0)
+BigReal::BigReal()
 {
+    //ctor
 }
 
-BigReal::BigReal(string realNumber)
+
+BigReal::BigReal (string realNumber)
 {
+
     setNumber(realNumber);
 
 }
@@ -24,52 +26,10 @@ BigReal::BigReal(BigDecimalInt bigInteger)
     number=bigInteger.getNumber();
 }
 
-// BigReal::BigReal(const BigReal& other)
-// {
-//     ptrNum = new int [other.size];
-//     for (int i = 0; i < ptrNum.size; i++){
-//         ptrNum[i] = other.ptrNum[i];
-//     }
-// }
-
-// BigReal& BigReal::operator=(const BigReal& other)
-// {
-//     if (this != &other){
-//         delete [] ptrNum;
-//         ptrNum = new int [other.size];
-
-//         for (int i = 0; i < ptrNum.size; i++){
-//         ptrNum[i] = other.ptrNum[i];
-//         }
-//     }
-
-//     return *this;
-// }
-
-// BigReal::BigReal(BigReal&& other)
-// {
-//     ptrNum = other.ptrNum;
-//     other.ptrNum = nullptr;
-// }
-
-// BigReal& BigReal::operator=(const BigReal& other)
-// {
-//     if (&other != this){
-//         delete [] ptrNum;
-//         ptrNum = other.ptrNum;
-
-//         for (int i = 0; i < ptrNum.size; i++){
-//         ptrNum[i] = other.ptrNum[i];
-//         }
-//     }
-//     other.ptrNum = nullptr;
-
-//     return *this;
-// }
-
 void BigReal :: setNumber(string num)
 {
-bool validNumber = checkValidInput(num);
+
+    bool validNumber = checkValidInput(num);
     if(validNumber)
     {
         number = num;
@@ -87,168 +47,162 @@ bool validNumber = checkValidInput(num);
         {
             signNumber = '+';
         }
+
+        string numm;
+        int pose = num.find('.') ;
+        fraction=num.substr(pose+1);
+        numm=num.substr(0,pose);
+        BigDecimalInt whl(numm);
+        whole=whl;
+
+
+
     }
     else
     {
         cout << "Invalid" << "\n";
         exit(1);
     }
+
+}
+
+void BigReal :: matchzeros(string f1, string f2)
+{
+    if (f1.size()>f2.size())
+    {
+        for(int i =f2.size() ; i<f1.size();i++)
+        {
+            f2+='0';
+        }
+    }
+    else if(f1.size()<f2.size())
+    {
+        for(int i =f1.size() ; i<f2.size();i++)
+        {
+            f1+='0';
+        }
+    }
 }
 
 
 bool BigReal :: operator < (const BigReal anotherReal)
 {
-    string whole1,whole2,fraction1,fraction2;
-
-    whole1=number;
-    whole2=anotherReal.number;
-    int pose = whole1.find(".") ;
-    fraction1=whole1.substr(pose+1);
-    whole1=whole1.substr(0,pose);
-    pose = whole2.find(".") ;
-    fraction2=whole2.substr(pose+1);
-    whole2=whole2.substr(0,pose);
-
-    if(whole1!=whole2)
+    if(signNumber=='+' && anotherReal.signNumber=='-')
     {
-        string comp1 = "", comp2 = "";
-        long long len1 = whole1.length(), len2 = whole2.length();
-        while (len1 < len2){
-            comp1 += '0';
-            len1++;
-        }
-        while (len2 < len1){
-            comp2 += '0';
-            len2++;
-        }
-        comp1 += whole1;
-        comp2 += whole2;
-        if(signNumber == '-' && anotherReal.signNumber == '+')
+        return false;
+
+    }
+    if (signNumber=='-' && anotherReal.signNumber=='+')
+    {
+        return true;
+    }
+    string leftf=fraction;
+    string rightf=anotherReal.fraction;
+    matchzeros(leftf,rightf);
+
+    if(whole==anotherReal.whole)
+    {
+        if(signNumber=='-')  //-3.555 < -3.65
         {
-            return true;
-        }
-        else if(signNumber == '+' && anotherReal.signNumber == '-')
-        {
-            return false;
-        }
-        else if(signNumber == '+' && anotherReal.signNumber == '+')
-        {
-            return comp1 < comp2;
+            return(leftf>rightf);
         }
         else
         {
-            return comp1 > comp2;
+            return(leftf<rightf);
         }
     }
     else
     {
-        string comp1 = "", comp2 = "";
-        long long len1 = fraction1.length(), len2 = fraction2.length();
-        while (len1 < len2){
-            comp1 += '0';
-            len1++;
-        }
-        while (len2 < len1){
-            comp2 += '0';
-            len2++;
-        }
-        comp1 += fraction1;
-        comp2 += fraction2;
+        return(whole<anotherReal.whole);
 
-        if(signNumber == '-' && anotherReal.signNumber == '+')
-        {
-            return true;
-        }
-        else if(signNumber == '+' && anotherReal.signNumber == '-')
-        {
-            return false;
-        }
-        else if(signNumber == '+' && anotherReal.signNumber == '+')
-        {
-            return comp1 < comp2;
-        }
-        else
-        {
-            return comp1 > comp2;
-        }
     }
-
 }
+
+
 
 bool BigReal :: operator > (BigReal anotherReal)
 {
-    string whole1,whole2,fraction1,fraction2;
-
-    whole1=number;
-    whole2=anotherReal.number;
-    int pose = whole1.find(".") ;
-    fraction1=whole1.substr(pose+1);
-    whole1=whole1.substr(0,pose);
-    pose = whole2.find(".") ;
-    fraction2=whole2.substr(pose+1);
-    whole2=whole2.substr(0,pose);
-
-    if(whole1!=whole2)
+    if(signNumber=='+' && anotherReal.signNumber=='-')
     {
-        string comp1 = "", comp2 = "";
-        long long len1 = whole1.length(), len2 = whole2.length();
-        while (len1 < len2){
-            comp1 += '0';
-            len1++;
-        }
-        while (len2 < len1){
-            comp2 += '0';
-            len2++;
-        }
-        comp1 += whole1;
-        comp2 += whole2;
-        if(signNumber == '-' && anotherReal.signNumber == '+')
+        return true;
+
+    }
+    if (signNumber=='-' && anotherReal.signNumber=='+')
+    {
+        return false;
+    }
+    string leftf=fraction;
+    string rightf=anotherReal.fraction;
+    matchzeros(leftf,rightf);
+
+    if(whole==anotherReal.whole)
+    {
+        if(signNumber=='-')
         {
-            return true;
-        }
-        else if(signNumber == '+' && anotherReal.signNumber == '-')
-        {
-            return false;
-        }
-        else if(signNumber == '+' && anotherReal.signNumber == '+')
-        {
-            return comp1 < comp2;
+            return(leftf<rightf);
         }
         else
         {
-            return comp1 > comp2;
+            return(leftf>rightf);
         }
     }
     else
     {
-        string comp1 = "", comp2 = "";
-        long long len1 = fraction1.length(), len2 = fraction2.length();
-        while (len1 < len2){
-            comp1 += '0';
-            len1++;
-        }
-        while (len2 < len1){
-            comp2 += '0';
-            len2++;
-        }
-        comp1 += fraction1;
-        comp2 += fraction2;
+        return(whole>anotherReal.whole);
 
-        if(signNumber == '-' && anotherReal.signNumber == '+')
+    }
+}
+
+bool BigReal :: operator== (BigReal anotherReal)
+{
+    if (signNumber == anotherReal.signNumber && number == anotherReal.number)
+    {
+        return true;
+
+    }
+    else
+    {
+        return false;
+    }
+}
+
+int BigReal :: size()
+{
+    return number.size();
+}
+
+int BigReal :: sign()
+{
+    if (signNumber == '+')
+    {
+        return true;
+    }
+    else
+    {
+        return false ;
+    }
+}
+
+ostream& operator << (ostream& out, BigReal num)
+{
+    if(num.signNumber == '+')
+    {
+        out << num.number ;
+    }
+    else
+    {
+        if(num.number == "0")
         {
-            return false;
-        }
-        else if(signNumber == '+' && anotherReal.signNumber == '-')
-        {
-            return true;
-        }
-        else if(signNumber == '+' && anotherReal.signNumber == '+')
-        {
-            return comp1 > comp2;
+            out << num.number ;
         }
         else
         {
-            return comp1 < comp2;
+            out << num.signNumber << num.number ;
         }
     }
+    return out;
+}
+istream& operator >> (istream& out, BigReal num)
+{
+
 }

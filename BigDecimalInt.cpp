@@ -1,16 +1,4 @@
-// FCAI – Object-Oriented Programming 1 – 2022 - Assignment 1
-// Program Name: BigDecimalInt
-// Last Modification Date: 13/10/2022
-// Author1 and ID and Group: Basmala Mohamed Sayed Gad  ID: 20210090 (a, b, c)
-// Author2 and ID and Group: Aya Ali Hassan  ID: 20210083 (d, e)
-// Author3 and ID and Group: Mohamed Ashraf Fahim  ID: 20210329 (f, i, j , k)
-/*
-description: In this problem we developed a new C++ type (class).
-that can hold unlimited decimal integer values and performs arithmetic operations on them.
-such as: +, -, <, and >.
- */
-
-#include "BigDecimalIntClass.h"
+#include "BigDecimalInt.h"
 
 // regex function that checks the validation of the input.
 bool BigDecimalInt :: checkValidInput(string input)
@@ -81,7 +69,7 @@ bool BigDecimalInt :: operator < (const BigDecimalInt& anotherDec)
     {
         return comp1 > comp2;
     }
-    
+
     //3.6 3.66
 }
 
@@ -199,7 +187,7 @@ string subtraction(string num1,string num2){
 // // operator + overloading function.
 BigDecimalInt BigDecimalInt :: operator + (BigDecimalInt number2)
 {
-    //real + real 
+    //real + real
     //->>> 4 string
     BigDecimalInt result;
     char signNumber1 = signNumber, signNumber2 = number2.signNumber;
