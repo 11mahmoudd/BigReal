@@ -23,7 +23,7 @@ BigReal::BigReal (string realNumber)
 
 BigReal::BigReal(BigDecimalInt bigInteger)
 {
-    number=bigInteger.getNumber();
+    number = bigInteger.getNumber();
 }
 
 void BigReal :: setNumber(string num)
