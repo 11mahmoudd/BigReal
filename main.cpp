@@ -2,7 +2,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 #include "BigReal.h"
-#include "BigDecimalIntClass.h"
+#include "BigDecimalInt.h"
 
 int main()
 {

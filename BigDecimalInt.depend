@@ -1,0 +1,23 @@
+# depslib dependency file v1.0
+1668088492 source:c:\college\projects\bigreal\bigdecimalint.cpp
+	"BigDecimalInt.h"
+
+1668088492 c:\college\projects\bigreal\bigdecimalint.h
+	<iostream>
+	<deque>
+	<regex>
+
+1668088637 source:c:\college\projects\bigreal\bigreal.cpp
+	"BigReal.h"
+
+1668089342 c:\college\projects\bigreal\bigreal.h
+	<bits/stdc++.h>
+	<regex>
+	"BigDecimalInt.h"
+
+1668090323 source:c:\college\projects\bigreal\main.cpp
+	<iostream>
+	<bits/stdc++.h>
+	"BigReal.h"
+	"BigDecimalInt.h"
+

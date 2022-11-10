@@ -3,7 +3,7 @@
 #include<bits/stdc++.h>
 #include<regex>
 using namespace std;
-#include"BigDecimalIntClass.h"
+#include"BigDecimalInt.h"
 
 class BigReal
 {
