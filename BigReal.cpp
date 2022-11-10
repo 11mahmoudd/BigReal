@@ -1,31 +1,71 @@
-
 #include "BigReal.h"
 
 
-bool BigReal :: checkValidInput(string input)
+
+bool BigReal :: checkValidInput (string input)
 {
     regex validInput("[-+]?[0-9]+([.]?[0-9]+)?");
     return regex_match(input, validInput);
 }
 
+
+
 BigReal::BigReal()
 {
-    //ctor
+    number = "";
+    signNumber = '+';
+}
+BigReal ::BigReal(double realNumber) {
+    realNumber = 0.0;
 }
 
-
-BigReal::BigReal (string realNumber)
+BigReal::BigReal(string number)
 {
-
-    setNumber(realNumber);
+    setNumber(number);
 
 }
 
 BigReal::BigReal(BigDecimalInt bigInteger)
 {
-    number=bigInteger.getNumber();
+    number = bigInteger.getNumber();
 }
 
+BigReal::BigReal(const BigReal &other) {
+    this->Number = other.Number  ;
+    this->signNumber = other.signNumber ;
+}
+
+BigReal::BigReal(BigReal &&other) {
+    Number = other.Number ;
+    signNumber = other.signNumber ;
+
+    other.Number[0] = '\0' ;
+    other.signNumber = '\0' ;
+}
+
+BigReal &BigReal::operator=(BigReal &&other) {
+    this->Number = other.Number  ;
+    this->signNumber = other.signNumber ;
+
+    other.Number[0] = '\0' ;
+    other.signNumber = '\0' ;
+
+    return *this;
+}
+
+
+BigReal& BigReal::operator=(BigReal& other)
+{
+    if (&other != this){
+        delete [] Number;
+        this->Number = other.Number  ;
+        this->signNumber = other.signNumber ;
+    }
+    other.Number = nullptr;
+    other.signNumber = '\0';
+
+    return *this;
+}
 void BigReal :: setNumber(string num)
 {
 
@@ -62,10 +102,6 @@ void BigReal :: setNumber(string num)
             BigDecimalInt whl(num);
             whole=whl;
         }
-
-
-
-
     }
     else
     {
@@ -75,7 +111,7 @@ void BigReal :: setNumber(string num)
 
 }
 
-void BigReal :: matchzeros(string f1, string f2)
+void  matchzeros(string &f1, string& f2)
 {
     if (f1.size()>f2.size())
     {
@@ -93,8 +129,295 @@ void BigReal :: matchzeros(string f1, string f2)
     }
 }
 
+void subcarry(string& r,string& carry){
+    char s;
+    if(r[0] == '-'){
+        s = r[0];
+        r.erase(0,1);
+        while (r.length() > carry.length()) {
+            carry.insert(carry.begin(), '0');
+        }
+        BigDecimalInt c1(r),c2(carry),c3;
+        c3 = c1 - c2;
+        r = c3.getNumber();
+        r.insert(r.begin(),s);
+    }
+    else{
+        while (r.length() > carry.length()) {
+            carry.insert(carry.begin(), '0');
+        }
+        BigDecimalInt c1(r),c2(carry),c3;
+        c3 = c1 - c2;
+        r = c3.getNumber();
+    }
 
-bool BigReal :: operator < (const BigReal anotherReal)
+}
+void addcarry(string& r,string& carry){
+    char s;
+
+    if(r[0] == '-'){
+        s = r[0];
+        r.erase(0,1);
+        while (r.length() > carry.length()) {
+            carry.insert(carry.begin(), '0');
+        }
+        BigDecimalInt c1(r),c2(carry),c3;
+        c3 = c1 + c2;
+        r = c3.getNumber();
+        r.insert(r.begin(),s);
+    }
+    else{
+        while (r.length() > carry.length()) {
+            carry.insert(carry.begin(), '0');
+        }
+        BigDecimalInt c1(r),c2(carry),c3;
+        c3 = c1 + c2;
+        r = c3.getNumber();
+    }
+
+}
+
+BigReal BigReal::operator+(BigReal& number2) {
+    int check,count=0;
+    string Carry = "1", r, f1 = fraction, f2 = number2.fraction;
+    BigReal FinalResult;
+    BigDecimalInt r1 = whole + number2.whole;
+    r = r1.getNumber();
+    matchzeros(f1, f2);
+
+    for (int i = 0; i < f1.length(); ++i) {
+        if ((int) f1[i] > (int) f2[i]) {
+            check = 1;
+            break;
+        } else if ((int) f1[i] < (int) f2[i]) {
+            check = 2;
+            break;
+        }
+        else{
+            count++;
+        }
+    }
+    if(f1.length() == count){
+        check = 3;
+    }
+    if (signNumber == '-' && number2.signNumber == '+') {
+
+        if (check == 1) {
+            if(r == "0"){
+                r = "-0";
+            }
+            if(r[0] == '-') {
+                BigDecimalInt num1(f1), num2(f2), num;
+                num = num1 - num2;
+                f1 = num.getNumber();
+                while (count != 0){
+                    f1.insert(f1.begin(),'0');
+                    count--;
+                }
+            }
+            else{
+                f2.insert(f2.begin(), '1');
+                BigDecimalInt num1(f1), num2(f2), num;
+                num = num2 - num1;
+                f1 = num.getNumber();
+                subcarry(r, Carry);
+            }
+
+        } else if (check == 2) {
+            if(r == "0"){
+                BigDecimalInt num1(f1), num2(f2), num;
+                num = num2 - num1;
+                f1 = num.getNumber();
+                while (count != 0){
+                    f1.insert(f1.begin(),'0');
+                    count--;
+                }
+            }
+            else if(r[0] == '-'){
+                f1.insert(f1.begin(), '1');
+                BigDecimalInt num1(f1), num2(f2), num;
+                num = num1 - num2;
+                f1 = num.getNumber();
+                subcarry(r, Carry);
+            }
+            else {
+                BigDecimalInt num1(f1), num2(f2), num;
+                num = num2 - num1;
+                f1 = num.getNumber();
+                while (count != 0){
+                    f1.insert(f1.begin(),'0');
+                    count--;
+                }
+            }
+        }
+        else if (check == 3){
+            f1 = "0";
+        }
+    }
+    else if (signNumber == '+' && number2.signNumber == '-') {
+        if (check == 1) {
+            if(r == "0"){
+                BigDecimalInt num1(f1), num2(f2), num;
+                num = num1 - num2;
+                f1 = num.getNumber();
+                while (count != 0){
+                    f1.insert(f1.begin(),'0');
+                    count--;
+                }
+            }
+            else if(r[0] == '-'){
+                f2.insert(f2.begin(), '1');
+                BigDecimalInt num1(f1), num2(f2), num;
+                num = num2 - num1;
+                f1 = num.getNumber();
+                subcarry(r, Carry);
+            }
+            else {
+                BigDecimalInt num1(f1), num2(f2), num;
+                num = num1 - num2;
+                f1 = num.getNumber();
+                while (count != 0){
+                    f1.insert(f1.begin(),'0');
+                    count--;
+                }
+            }
+        } else if (check == 2) {
+            if(r == "0") {
+                r = "-0";
+            }
+            if (r[0] == '-'){
+                BigDecimalInt num1(f1), num2(f2), num;
+                num = num2 - num1;
+                f1 = num.getNumber();
+                while (count != 0){
+                    f1.insert(f1.begin(),'0');
+                    count--;
+                }
+            }
+            else{
+            f1.insert(f1.begin(), '1');
+            BigDecimalInt num1(f1), num2(f2), num;
+            num = num1 - num2;
+            f1 = num.getNumber();
+            subcarry(r, Carry);
+            }
+        }
+        else if(check == 3){
+            f1 = "0";
+        }
+    }
+    else  {
+        BigDecimalInt num1(f1), num2(f2), num;
+        num = num1 + num2;
+        f1 = num.getNumber();
+        if(f1.length() > f2.length()){
+            f1.erase(0,1);
+            addcarry(r, Carry);
+        }
+    }
+    FinalResult.number = r + "." + f1;
+    return FinalResult;
+
+}
+
+BigReal BigReal :: operator-(BigReal& number2) {
+    int check,count =0;
+    string Carry = "1", r, f1 = fraction, f2 = number2.fraction;
+    BigReal FinalResult;
+    BigDecimalInt r1 = whole - number2.whole;
+    r = r1.getNumber();
+    matchzeros(f1, f2);
+
+    for (int i = 0; i < f1.length(); ++i) {
+        if ((int) f1[i] > (int) f2[i]) {
+            check = 1;
+            break;
+        } else if ((int) f1[i] < (int) f2[i]) {
+            check = 2;
+            break;
+        }
+        else{
+            count++;
+        }
+    }
+    if(f1.length() == count){
+        check = 3;
+    }
+    if (signNumber == '-' && number2.signNumber == '+') {
+        BigDecimalInt num1(f1), num2(f2), num;
+        num = num1 + num2;
+        f1 = num.getNumber();
+        if(f1.length() > f2.length()){
+            f1.erase(0,1);
+            addcarry(r, Carry);
+        }
+    }
+    else if (signNumber == '+' && number2.signNumber == '-') {
+        BigDecimalInt num1(f1), num2(f2), num;
+        num = num1 + num2;
+        f1 = num.getNumber();
+        if(f1.length() > f2.length()){
+            f1.erase(0,1);
+            addcarry(r, Carry);
+        }
+    }
+    else  {
+        if (check == 1) {
+            if(r == "0"){
+                BigDecimalInt num1(f1), num2(f2), num;
+                num = num1 - num2;
+                f1 = num.getNumber();
+                while (count != 0){
+                    f1.insert(f1.begin(),'0');
+                    count--;
+                }
+            }
+            else if(r[0] == '-'){
+                f2.insert(f2.begin(), '1');
+                BigDecimalInt num1(f1), num2(f2), num;
+                num = num2 - num1;
+                f1 = num.getNumber();
+                subcarry(r, Carry);
+            }
+            else {
+                BigDecimalInt num1(f1), num2(f2), num;
+                num = num1 - num2;
+                f1 = num.getNumber();
+                while (count != 0){
+                    f1.insert(f1.begin(),'0');
+                    count--;
+                }
+            }
+        } else if (check == 2) {
+            if(r == "0") {
+                r = "-0";
+            }
+            if (r[0] == '-'){
+                BigDecimalInt num1(f1), num2(f2), num;
+                num = num2 - num1;
+                f1 = num.getNumber();
+                while (count != 0){
+                    f1.insert(f1.begin(),'0');
+                    count--;
+                }
+            }
+            else{
+                f1.insert(f1.begin(), '1');
+                BigDecimalInt num1(f1), num2(f2), num;
+                num = num1 - num2;
+                f1 = num.getNumber();
+                subcarry(r, Carry);
+            }
+        }
+        else if(check == 3){
+            f1 = "0";
+        }
+    }
+    FinalResult.number = r + "." + f1;
+    return FinalResult;
+}
+
+bool BigReal :: operator < (BigReal& anotherReal)
 {
     if(signNumber=='+' && anotherReal.signNumber=='-')
     {
@@ -127,9 +450,7 @@ bool BigReal :: operator < (const BigReal anotherReal)
     }
 }
 
-
-
-bool BigReal :: operator > (BigReal anotherReal)
+bool BigReal :: operator > (BigReal& anotherReal)
 {
     if(signNumber=='+' && anotherReal.signNumber=='-')
     {
@@ -162,7 +483,7 @@ bool BigReal :: operator > (BigReal anotherReal)
     }
 }
 
-bool BigReal :: operator== (BigReal anotherReal)
+bool BigReal :: operator == (BigReal &anotherReal)
 {
     if (signNumber == anotherReal.signNumber && number == anotherReal.number)
     {
@@ -192,8 +513,9 @@ int BigReal :: sign()
     }
 }
 
-ostream& operator << (ostream& out, const BigReal& num)
+ostream &operator << (ostream &out, const BigReal& num)
 {
+
     if(num.signNumber == '+')
     {
         out << num.number ;
@@ -211,12 +533,10 @@ ostream& operator << (ostream& out, const BigReal& num)
     }
     return out;
 }
-istream& operator >> (istream& in, BigReal& num)
+istream& operator >> (istream& out, BigReal& num)
 {
-
-    cout<<"Enter the real number : ";
-    in>>num.number;
-    num.setNumber(num.number);
-    return in;
-
+    string str1;
+    out >> str1;
+    num.setNumber(str1);
+    return out;
 }
