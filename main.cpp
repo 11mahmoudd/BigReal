@@ -4,20 +4,19 @@
 
     int main()
     {
-        string s1,s2;
-
-        cin>>s1;
-        cin>>s2;
-        BigReal a(s1),b(s2), c();
+        BigReal a,b, c;
+        cin>>a>>b;
         if(a==b)
         {
-            cout<<"done"<<endl;
+            cout<<"match"<<endl;
+        }
+        else
+        {
+            cout<<"not match";
         }
         cout<<a.sign()<<endl;
         cout<<a.size()<<endl;
-        cout<<b<<endl;
-        // cin>>c;
-        // cout<<c;
+        cout<<a<<endl<<b;
 
 
 

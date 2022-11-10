@@ -19,8 +19,8 @@ class BigReal
         void setNumber( string num);
         int size();
         int sign();
-        friend ostream& operator << (ostream& out, BigReal num);
-        friend istream& operator >> (istream& out, BigReal num);
+        friend ostream& operator << (ostream& out,const BigReal& num);
+        friend istream& operator >> (istream& in, BigReal& num);
 
     protected:
 

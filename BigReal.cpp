@@ -4,7 +4,7 @@
 
 bool BigReal :: checkValidInput(string input)
 {
-    regex validInput("[-+]?[0-9]+[.]?[0-9]+");
+    regex validInput("[-+]?[0-9]+([.]?[0-9]+)?");
     return regex_match(input, validInput);
 }
 
@@ -23,7 +23,7 @@ BigReal::BigReal (string realNumber)
 
 BigReal::BigReal(BigDecimalInt bigInteger)
 {
-    number = bigInteger.getNumber();
+    number=bigInteger.getNumber();
 }
 
 void BigReal :: setNumber(string num)
@@ -48,12 +48,21 @@ void BigReal :: setNumber(string num)
             signNumber = '+';
         }
 
-        string numm;
         int pose = num.find('.') ;
-        fraction=num.substr(pose+1);
-        numm=num.substr(0,pose);
-        BigDecimalInt whl(numm);
-        whole=whl;
+        if(pose>=1)
+        {
+            string numm;
+            fraction=num.substr(pose+1);
+            numm=num.substr(0,pose);
+            BigDecimalInt whl(numm);
+            whole=whl;
+        }
+        else
+        {
+            BigDecimalInt whl(num);
+            whole=whl;
+        }
+
 
 
 
@@ -168,7 +177,7 @@ bool BigReal :: operator== (BigReal anotherReal)
 
 int BigReal :: size()
 {
-    return number.size();
+    return whole.size()+fraction.size();
 }
 
 int BigReal :: sign()
@@ -183,7 +192,7 @@ int BigReal :: sign()
     }
 }
 
-ostream& operator << (ostream& out, BigReal num)
+ostream& operator << (ostream& out, const BigReal& num)
 {
     if(num.signNumber == '+')
     {
@@ -202,7 +211,12 @@ ostream& operator << (ostream& out, BigReal num)
     }
     return out;
 }
-istream& operator >> (istream& out, BigReal num)
+istream& operator >> (istream& in, BigReal& num)
 {
+
+    cout<<"Enter the real number : ";
+    in>>num.number;
+    num.setNumber(num.number);
+    return in;
 
 }
