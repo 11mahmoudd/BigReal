@@ -18,8 +18,8 @@ public:
     BigReal (BigReal&& other);
     BigReal& operator= (BigReal& other);
     BigReal& operator= (BigReal&& other);
-    BigReal operator+ (BigReal& other);
-    BigReal operator- (BigReal& other);
+    BigReal operator+ (const BigReal& other);
+    BigReal operator- (const BigReal& other);
     bool operator == (BigReal& anotherReal);
     bool operator < (BigReal& anotherReal);
     bool operator > (BigReal& anotherReal);
@@ -34,12 +34,13 @@ public:
 
 private:
 
-    int* Number;
+    int Number;
     BigDecimalInt whole;
     string fraction;
     string number;
     char signNumber;
     bool checkValidInput(string input);
 };
+
 
 #endif // BIGREAL_H

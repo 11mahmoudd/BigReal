@@ -8,13 +8,12 @@ bool BigReal :: checkValidInput (string input)
     return regex_match(input, validInput);
 }
 
-
-
 BigReal::BigReal()
 {
     number = "";
     signNumber = '+';
 }
+
 BigReal ::BigReal(double realNumber) {
     realNumber = 0.0;
 }
@@ -39,16 +38,18 @@ BigReal::BigReal(BigReal &&other) {
     Number = other.Number ;
     signNumber = other.signNumber ;
 
-    other.Number[0] = '\0' ;
+    other.Number = 0;
     other.signNumber = '\0' ;
 }
 
 BigReal &BigReal::operator=(BigReal &&other) {
-    this->Number = other.Number  ;
-    this->signNumber = other.signNumber ;
+   if (&other != this){
+        this->Number = other.Number  ;
+        this->signNumber = other.signNumber ;
 
-    other.Number[0] = '\0' ;
-    other.signNumber = '\0' ;
+        other.Number = 0;
+        other.signNumber = '\0';
+    }
 
     return *this;
 }
@@ -57,15 +58,13 @@ BigReal &BigReal::operator=(BigReal &&other) {
 BigReal& BigReal::operator=(BigReal& other)
 {
     if (&other != this){
-        delete [] Number;
         this->Number = other.Number  ;
         this->signNumber = other.signNumber ;
     }
-    other.Number = nullptr;
-    other.signNumber = '\0';
 
     return *this;
 }
+
 void BigReal :: setNumber(string num)
 {
 
